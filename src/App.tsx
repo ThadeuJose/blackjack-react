@@ -1,5 +1,4 @@
 import { Card } from "./Card";
-import Footer from "./components/Footer/Footer";
 import Game from "./components/Game/Game";
 
 export default function App() {
@@ -13,7 +12,6 @@ export default function App() {
   return (
     <main>
       <Game deckOfCards={testDeckOfCards} />
-      <Footer />
     </main>
   );
 }

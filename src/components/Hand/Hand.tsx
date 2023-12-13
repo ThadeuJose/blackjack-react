@@ -1,4 +1,5 @@
 import { Card } from "../../Card";
+import "./Hand.css";
 
 interface HandProps {
   title: string;
@@ -14,12 +15,20 @@ export default function Hand({
   data_cy,
 }: HandProps): JSX.Element {
   return (
-    <>
-      {title} <span data-cy={data_cy}>{value}</span>
-      {cards.map((path, index) => (
-        <img key={index} src={`images/${printCard(path)}.png`} />
-      ))}
-    </>
+    <div className='container'>
+      <div className='title-box'>
+        {title}: <span data-cy={data_cy}>{value}</span>
+      </div>
+      <div className='card-box'>
+        {cards.map((path, index) => (
+          <img
+            className='card'
+            key={index}
+            src={`images/${printCard(path)}.png`}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 

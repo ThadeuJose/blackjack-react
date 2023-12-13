@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card } from "../../Card";
 import Hand from "../Hand/Hand";
 import useHand from "../Hand/useHand";
+import "./Game.css";
 
 interface GameProps {
   deckOfCards: Card[];
@@ -48,22 +49,26 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
   }
 
   return (
-    <>
-      <Hand
-        title={"Player's hand"}
-        data_cy='playerHandValue'
-        cards={cardsPlayer}
-        value={valuePlayer}
-      />
-      <Hand
-        title={"Dealer's hand"}
-        data_cy='dealerHandValue'
-        cards={cardsDealer}
-        value={valueDealer}
-      />
-      <div className='textupdates'>{message}</div>
-      {Panel()}
-    </>
+    <div className='game-container'>
+      <div className='hands-box'>
+        <Hand
+          title={"Dealer's hand"}
+          data_cy='dealerHandValue'
+          cards={cardsDealer}
+          value={valueDealer}
+        />
+        <Hand
+          title={"Player's hand"}
+          data_cy='playerHandValue'
+          cards={cardsPlayer}
+          value={valuePlayer}
+        />
+      </div>
+      <div className='control-box'>
+        <div className='textupdates'>{message}</div>
+        {Panel()}
+      </div>
+    </div>
   );
 }
 
