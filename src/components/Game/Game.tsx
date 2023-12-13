@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Card } from "../../Card";
+import Hand from "../Hand/Hand";
+import useHand from "../Hand/useHand";
 
 interface GameProps {
   deckOfCards: Card[];
@@ -7,25 +9,22 @@ interface GameProps {
 
 export default function Game({ deckOfCards }: GameProps): JSX.Element {
   let message: string = "Press 'New Game' to begin!";
-  let [playerHandValue, setPlayerHandValue] = useState<number>(0);
-  let [playerCards, setPlayerCards] = useState<string[]>([]);
 
-  let [dealerHandValue, setDealerHandValue] = useState<number>(0);
-  let [dealerCards, setDealerCards] = useState<string[]>([]);
+  let { add: addPlayer, value: valuePlayer, cards: cardsPlayer } = useHand();
+  let { add: addDealer, value: valueDealer, cards: cardsDealer } = useHand();
 
   const start = "Start";
   const playing = "IsPlaying";
   let [gameState, setGameState] = useState<string>(start);
 
   function handleClick() {
-    let playerHand: Card[] = getHand(deckOfCards);
-    setPlayerHandValue(calculateHand(playerHand));
-    setPlayerCards(playerHand.map((card) => printCard(card)));
+    let playerHand: Card[] = getPlayerHand(deckOfCards);
+    addPlayer(playerHand[0]);
+    addPlayer(playerHand[1]);
 
-    let dealerHand: Card[] = getHand(deckOfCards);
-    dealerHand[1].hidden = true;
-    setDealerHandValue(calculateHand(dealerHand));
-    setDealerCards(dealerHand.map((card) => printCard(card)));
+    let dealerHand: Card[] = getDealerHand(deckOfCards);
+    addDealer(dealerHand[0]);
+    addDealer(dealerHand[1]);
 
     setGameState(playing);
   }
@@ -50,21 +49,31 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
 
   return (
     <>
-      Your hand <span data-cy='playerHandValue'>{playerHandValue}</span>
-      {playerCards.map((path, index) => (
-        <img key={index} src={path} />
-      ))}
-      Dealer hand <span data-cy='dealerHandValue'>{dealerHandValue}</span>
-      {dealerCards.map((path, index) => (
-        <img key={index} src={path} />
-      ))}
+      <Hand
+        title={"Player's hand"}
+        data_cy='playerHandValue'
+        cards={cardsPlayer}
+        value={valuePlayer}
+      />
+      <Hand
+        title={"Dealer's hand"}
+        data_cy='dealerHandValue'
+        cards={cardsDealer}
+        value={valueDealer}
+      />
       <div className='textupdates'>{message}</div>
       {Panel()}
     </>
   );
 }
 
-function getHand(deckOfCards: Card[]) {
+function getDealerHand(deckOfCards: Card[]) {
+  let dealerHand: Card[] = getPlayerHand(deckOfCards);
+  dealerHand[1].hidden = true;
+  return dealerHand;
+}
+
+function getPlayerHand(deckOfCards: Card[]) {
   let playerHand: Card[] = [];
   for (let index = 0; index < 2; index++) {
     let card: Card | undefined = deckOfCards.shift();
@@ -74,56 +83,4 @@ function getHand(deckOfCards: Card[]) {
     }
   }
   return playerHand;
-}
-
-export function printCard(card: Card): string {
-  if (card.hidden) {
-    return "images/back.png";
-  }
-  return `images/${card.suit}_${printRank(card.rank)}.png`;
-}
-
-function printRank(rank: string): string {
-  if (rank === "A") {
-    return "1";
-  }
-  if (rank === "J") {
-    return "jack";
-  }
-  if (rank === "Q") {
-    return "queen";
-  }
-  if (rank === "K") {
-    return "king";
-  }
-  return rank;
-}
-
-export function calculateHand(hand: Card[]): number {
-  let total: number = hand
-    .filter((card) => !card.hidden)
-    .map((card) => calculateValue(card.rank))
-    .reduce((accumulator, value) => accumulator + value, 0);
-  if (total >= 21) {
-    return total;
-  }
-  let aceAmount = hand.filter(
-    (card) => card.rank === "A" && !card.hidden
-  ).length;
-  for (let index = 0; index < aceAmount; index++) {
-    total += 10;
-    if (total >= 21) {
-      return total;
-    }
-  }
-  return total;
-}
-function calculateValue(rank: string): number {
-  if (rank === "A") {
-    return 1;
-  }
-  if (rank === "J" || rank === "Q" || rank === "K") {
-    return 10;
-  }
-  return Number(rank);
 }

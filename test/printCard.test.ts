@@ -1,8 +1,7 @@
 import { Card } from "../src/Card";
-import { printCard } from "../src/components/Game/Game";
 import { expect } from "@jest/globals";
+import { printCard } from "../src/components/Hand/Hand";
 
-// Describe block for the test suite
 describe("printCard", () => {
   test("should print Pips", () => {
     const card: Card = { rank: "10", suit: "heart", hidden: false };
