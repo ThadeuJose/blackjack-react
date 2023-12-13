@@ -13,6 +13,10 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
   let [dealerHandValue, setDealerHandValue] = useState<number>(0);
   let [dealerCards, setDealerCards] = useState<string[]>([]);
 
+  const start = "Start";
+  const playing = "IsPlaying";
+  let [gameState, setGameState] = useState<string>(start);
+
   function handleClick() {
     let playerHand: Card[] = getHand(deckOfCards);
     setPlayerHandValue(calculateHand(playerHand));
@@ -22,6 +26,26 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
     dealerHand[1].hidden = true;
     setDealerHandValue(calculateHand(dealerHand));
     setDealerCards(dealerHand.map((card) => printCard(card)));
+
+    setGameState(playing);
+  }
+
+  function Panel(): JSX.Element {
+    if (gameState === start) {
+      return (
+        <div className='buttonbox'>
+          <button id='play' data-cy='NewGameButton' onClick={handleClick}>
+            New Game
+          </button>
+        </div>
+      );
+    }
+    return (
+      <div className='buttonbox'>
+        <button data-cy='HitButton'>Hit</button>
+        <button data-cy='StayButton'>Stay</button>
+      </div>
+    );
   }
 
   return (
@@ -34,18 +58,8 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
       {dealerCards.map((path, index) => (
         <img key={index} src={path} />
       ))}
-      <div className='textupdates' id='textUpdates'>
-        {message}
-      </div>
-      <div className='buttonbox' id='newgame'>
-        <button id='play' data-cy='NewGameButton' onClick={handleClick}>
-          New Game
-        </button>
-      </div>
-      <div className='buttonbox hidden' id='buttonBox'>
-        <button id='hit'>Hit</button>
-        <button id='stay'>Stay</button>
-      </div>
+      <div className='textupdates'>{message}</div>
+      {Panel()}
     </>
   );
 }

@@ -14,6 +14,20 @@ describe("<Game />", () => {
     cy.mount(<Game deckOfCards={testDeckOfCards} />);
   });
 
+  it("Shouldn't show hit and stay button when game begin", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "hearts", hidden: false },
+      { rank: "3", suit: "hearts", hidden: false },
+      { rank: "K", suit: "clubs", hidden: false },
+      { rank: "A", suit: "clubs", hidden: false },
+    ];
+
+    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+
+    cy.get("[data-cy='HitButton']").should("not.exist");
+    cy.get("[data-cy='StayButton']").should("not.exist");
+  });
+
   it("When press new game get two card in dealer hand and player hand, one card in dealer hand should be hidden", () => {
     const testDeckOfCards: Card[] = [
       { rank: "2", suit: "heart", hidden: false },
