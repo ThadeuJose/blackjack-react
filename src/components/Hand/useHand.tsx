@@ -4,12 +4,13 @@ import { Card } from "../../Card";
 export default function useHand() {
   let [value, setValue] = useState<number>(0);
   let [cards, setCards] = useState<Card[]>([]);
-  let temporaryCards: Card[] = [];
 
   function add(card: Card): void {
-    temporaryCards = [...temporaryCards, card];
-    setValue(calculateHand(temporaryCards));
-    setCards(temporaryCards);
+    setCards((prevState) => {
+      let newState = [...prevState, card];
+      setValue(calculateHand(newState));
+      return newState;
+    });
   }
 
   return {

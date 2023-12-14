@@ -7,6 +7,10 @@ export default function App() {
     { rank: "3", suit: "heart", hidden: false },
     { rank: "K", suit: "club", hidden: false },
     { rank: "A", suit: "club", hidden: false },
+    { rank: "5", suit: "club", hidden: false },
+    { rank: "A", suit: "club", hidden: false },
+    { rank: "10", suit: "heart", hidden: false },
+    { rank: "10", suit: "spade", hidden: false },
   ];
 
   return (

@@ -18,7 +18,7 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
   const playing = "IsPlaying";
   let [gameState, setGameState] = useState<string>(start);
 
-  function handleClick() {
+  function handleNewGameButtonClick() {
     let playerHand: Card[] = getPlayerHand(deckOfCards);
     addPlayer(playerHand[0]);
     addPlayer(playerHand[1]);
@@ -30,11 +30,18 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
     setGameState(playing);
   }
 
+  function handleHitButtonClick() {
+    let card: Card | undefined = deckOfCards.shift();
+    if (card && valuePlayer < 21) {
+      addPlayer(card);
+    }
+  }
+
   function Panel(): JSX.Element {
     if (gameState === start) {
       return (
         <div className='buttonbox'>
-          <button id='play' data-cy='NewGameButton' onClick={handleClick}>
+          <button data-cy='NewGameButton' onClick={handleNewGameButtonClick}>
             New Game
           </button>
         </div>
@@ -42,7 +49,9 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
     }
     return (
       <div className='buttonbox'>
-        <button data-cy='HitButton'>Hit</button>
+        <button data-cy='HitButton' onClick={handleHitButtonClick}>
+          Hit
+        </button>
         <button data-cy='StayButton'>Stay</button>
       </div>
     );

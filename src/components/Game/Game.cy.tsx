@@ -61,4 +61,84 @@ describe("<Game />", () => {
     cy.get("[data-cy='playerHandValue']").contains(5);
     cy.get("[data-cy='dealerHandValue']").contains(10);
   });
+
+  it("When press hit, should draw a card and put in player hand", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "3", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+      { rank: "10", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+
+    cy.get("img").eq(0).should("have.attr", "src", "images/club_king.png");
+    cy.get("img").eq(1).should("have.attr", "src", "images/back.png");
+    cy.get("img").eq(2).should("have.attr", "src", "images/heart_2.png");
+    cy.get("img").eq(3).should("have.attr", "src", "images/heart_3.png");
+    cy.get("img").eq(4).should("have.attr", "src", "images/club_10.png");
+  });
+
+  it("When press hit, should draw a card and put in player hand until is bust", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "3", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+      { rank: "10", suit: "club", hidden: false },
+      { rank: "10", suit: "heart", hidden: false },
+      { rank: "10", suit: "spade", hidden: false },
+    ];
+
+    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+
+    cy.get("img").eq(0).should("have.attr", "src", "images/club_king.png");
+    cy.get("img").eq(1).should("have.attr", "src", "images/back.png");
+    cy.get("img").eq(2).should("have.attr", "src", "images/heart_2.png");
+    cy.get("img").eq(3).should("have.attr", "src", "images/heart_3.png");
+    cy.get("img").eq(4).should("have.attr", "src", "images/club_10.png");
+    cy.get("img").eq(5).should("have.attr", "src", "images/heart_10.png");
+
+    cy.get("img").should("have.length", 6);
+  });
+
+  it("When press hit, should draw a card and put in player hand until is bust", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "3", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+      { rank: "5", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+      { rank: "10", suit: "heart", hidden: false },
+      { rank: "10", suit: "spade", hidden: false },
+    ];
+
+    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+
+    cy.get("img").eq(0).should("have.attr", "src", "images/club_king.png");
+    cy.get("img").eq(1).should("have.attr", "src", "images/back.png");
+    cy.get("img").eq(2).should("have.attr", "src", "images/heart_2.png");
+    cy.get("img").eq(3).should("have.attr", "src", "images/heart_3.png");
+    cy.get("img").eq(4).should("have.attr", "src", "images/club_5.png");
+    cy.get("img").eq(5).should("have.attr", "src", "images/club_1.png");
+
+    cy.get("img").should("have.length", 6);
+  });
 });
