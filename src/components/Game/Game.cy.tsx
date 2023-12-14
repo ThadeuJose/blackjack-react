@@ -40,10 +40,10 @@ describe("<Game />", () => {
 
     cy.get("[data-cy='NewGameButton']").click();
 
-    cy.get('img[src="images/heart_2.png"]').should("exist");
-    cy.get('img[src="images/heart_3.png"]').should("exist");
-    cy.get('img[src="images/club_king.png"]').should("exist");
-    cy.get('img[src="images/back.png"]').should("exist");
+    cy.get("img").eq(0).should("have.attr", "src", "images/club_king.png");
+    cy.get("img").eq(1).should("have.attr", "src", "images/back.png");
+    cy.get("img").eq(2).should("have.attr", "src", "images/heart_2.png");
+    cy.get("img").eq(3).should("have.attr", "src", "images/heart_3.png");
   });
 
   it("When press new game, should show correct sum of points in player and dealer hand", () => {
