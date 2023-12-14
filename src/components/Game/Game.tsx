@@ -9,7 +9,10 @@ interface GameProps {
 }
 
 export default function Game({ deckOfCards }: GameProps): JSX.Element {
-  let message: string = "Press 'New Game' to begin!";
+  let startMessage: string = "Press 'New Game' to begin";
+  let initialHandDealt: string = "The initial hands are dealt";
+
+  let [message, setMessage] = useState<string>(startMessage);
 
   let { add: addPlayer, value: valuePlayer, cards: cardsPlayer } = useHand();
   let { add: addDealer, value: valueDealer, cards: cardsDealer } = useHand();
@@ -27,6 +30,7 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
     addDealer(dealerHand[0]);
     addDealer(dealerHand[1]);
 
+    setMessage(initialHandDealt);
     setGameState(playing);
   }
 
@@ -74,7 +78,9 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
         />
       </div>
       <div className='control-box'>
-        <div className='textupdates'>{message}</div>
+        <div className='textupdates' data-cy='status'>
+          {message}
+        </div>
         {Panel()}
       </div>
     </div>
