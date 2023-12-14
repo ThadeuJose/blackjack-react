@@ -1,6 +1,8 @@
-import React from "react";
+import { useReducer } from "react";
 import Game from "./Game";
 import { Card } from "../../Card";
+import { reducer, init } from "./Redux";
+import { Store } from "../../Store";
 
 describe("<Game />", () => {
   it("renders", () => {
@@ -11,7 +13,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "clubs", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
   });
 
   it("Shouldn't show hit and stay button when game begin", () => {
@@ -22,7 +24,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "clubs", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='HitButton']").should("not.exist");
     cy.get("[data-cy='StayButton']").should("not.exist");
@@ -36,7 +38,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "clubs", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='status']").should(
       "have.text",
@@ -52,7 +54,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "club", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='NewGameButton']").click();
 
@@ -70,7 +72,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "clubs", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='NewGameButton']").click();
 
@@ -88,7 +90,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "club", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='NewGameButton']").click();
 
@@ -105,7 +107,7 @@ describe("<Game />", () => {
       { rank: "10", suit: "club", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='NewGameButton']").click();
     cy.get("[data-cy='HitButton']").click();
@@ -128,7 +130,7 @@ describe("<Game />", () => {
       { rank: "10", suit: "spade", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='NewGameButton']").click();
     cy.get("[data-cy='HitButton']").click();
@@ -148,8 +150,8 @@ describe("<Game />", () => {
 
   it("When press hit, should draw a card and put in player hand until is bust", () => {
     const testDeckOfCards: Card[] = [
-      { rank: "2", suit: "heart", hidden: false },
-      { rank: "3", suit: "heart", hidden: false },
+      { rank: "10", suit: "heart", hidden: false },
+      { rank: "10", suit: "club", hidden: false },
       { rank: "K", suit: "club", hidden: false },
       { rank: "A", suit: "club", hidden: false },
       { rank: "5", suit: "club", hidden: false },
@@ -158,21 +160,32 @@ describe("<Game />", () => {
       { rank: "10", suit: "spade", hidden: false },
     ];
 
-    cy.mount(<Game deckOfCards={testDeckOfCards} />);
+    cy.mount(<Store deck={testDeckOfCards} />);
 
     cy.get("[data-cy='NewGameButton']").click();
-    cy.get("[data-cy='HitButton']").click();
-    cy.get("[data-cy='HitButton']").click();
-    cy.get("[data-cy='HitButton']").click();
     cy.get("[data-cy='HitButton']").click();
 
     cy.get("img").eq(0).should("have.attr", "src", "images/club_king.png");
     cy.get("img").eq(1).should("have.attr", "src", "images/back.png");
-    cy.get("img").eq(2).should("have.attr", "src", "images/heart_2.png");
-    cy.get("img").eq(3).should("have.attr", "src", "images/heart_3.png");
+    cy.get("img").eq(2).should("have.attr", "src", "images/heart_10.png");
+    cy.get("img").eq(3).should("have.attr", "src", "images/club_10.png");
     cy.get("img").eq(4).should("have.attr", "src", "images/club_5.png");
-    cy.get("img").eq(5).should("have.attr", "src", "images/club_1.png");
 
-    cy.get("img").should("have.length", 6);
+    cy.get("img").should("have.length", 5);
+  });
+
+  it("Should won with a 21 in start hand", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "K", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You won");
   });
 });

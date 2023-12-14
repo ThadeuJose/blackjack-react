@@ -1,6 +1,6 @@
 import { Card } from "../src/Card";
 import { expect } from "@jest/globals";
-import { calculateHand } from "../src/components/Hand/useHand";
+import { calculateHand } from "../src/components/Game/Redux";
 
 describe("printCard", () => {
   test("should count value", () => {

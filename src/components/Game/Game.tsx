@@ -1,51 +1,29 @@
-import { useState } from "react";
-import { Card } from "../../Card";
 import Hand from "../Hand/Hand";
-import useHand from "../Hand/useHand";
 import "./Game.css";
+import { HitAction, NewGameAction, State } from "./Redux";
 
 interface GameProps {
-  deckOfCards: Card[];
+  dispatch: React.Dispatch<any>;
+  state: State;
 }
 
-export default function Game({ deckOfCards }: GameProps): JSX.Element {
-  let startMessage: string = "Press 'New Game' to begin";
-  let initialHandDealt: string = "The initial hands are dealt";
-
-  let [message, setMessage] = useState<string>(startMessage);
-
-  let { add: addPlayer, value: valuePlayer, cards: cardsPlayer } = useHand();
-  let { add: addDealer, value: valueDealer, cards: cardsDealer } = useHand();
-
-  const start = "Start";
-  const playing = "IsPlaying";
-  let [gameState, setGameState] = useState<string>(start);
-
+export default function Game({ dispatch, state }: GameProps): JSX.Element {
   function handleNewGameButtonClick() {
-    let playerHand: Card[] = getPlayerHand(deckOfCards);
-    addPlayer(playerHand[0]);
-    addPlayer(playerHand[1]);
-
-    let dealerHand: Card[] = getDealerHand(deckOfCards);
-    addDealer(dealerHand[0]);
-    addDealer(dealerHand[1]);
-
-    setMessage(initialHandDealt);
-    setGameState(playing);
+    dispatch({ type: NewGameAction });
   }
 
   function handleHitButtonClick() {
-    let card: Card | undefined = deckOfCards.shift();
-    if (card && valuePlayer < 21) {
-      addPlayer(card);
-    }
+    dispatch({ type: HitAction });
   }
 
   function Panel(): JSX.Element {
-    if (gameState === start) {
+    if (state.status === "Start" || state.status === "Winner") {
       return (
         <div className='buttonbox'>
-          <button data-cy='NewGameButton' onClick={handleNewGameButtonClick}>
+          <button
+            data-cy='NewGameButton'
+            onClick={() => handleNewGameButtonClick()}
+          >
             New Game
           </button>
         </div>
@@ -67,40 +45,22 @@ export default function Game({ deckOfCards }: GameProps): JSX.Element {
         <Hand
           title={"Dealer's hand"}
           data_cy='dealerHandValue'
-          cards={cardsDealer}
-          value={valueDealer}
+          cards={state.dealerHand.cards}
+          value={state.dealerHand.value}
         />
         <Hand
           title={"Player's hand"}
           data_cy='playerHandValue'
-          cards={cardsPlayer}
-          value={valuePlayer}
+          cards={state.playerHand.cards}
+          value={state.playerHand.value}
         />
       </div>
       <div className='control-box'>
         <div className='textupdates' data-cy='status'>
-          {message}
+          {state.message}
         </div>
         {Panel()}
       </div>
     </div>
   );
-}
-
-function getDealerHand(deckOfCards: Card[]) {
-  let dealerHand: Card[] = getPlayerHand(deckOfCards);
-  dealerHand[1].hidden = true;
-  return dealerHand;
-}
-
-function getPlayerHand(deckOfCards: Card[]) {
-  let playerHand: Card[] = [];
-  for (let index = 0; index < 2; index++) {
-    let card: Card | undefined = deckOfCards.shift();
-
-    if (card) {
-      playerHand = [...playerHand, card];
-    }
-  }
-  return playerHand;
 }
