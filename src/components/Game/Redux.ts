@@ -42,13 +42,9 @@ export function reducer(state: State, action: any): State {
   switch (action.type) {
     case NewGameAction: {
       let { deck: updatedDeck, hand: playerHand } = drawPlayerStarterHand(
-        state.playerHand,
         state.deck
       );
-      let { deck, hand: dealerHand } = drawDealerStarterHand(
-        state.dealerHand,
-        updatedDeck
-      );
+      let { deck, hand: dealerHand } = drawDealerStarterHand(updatedDeck);
 
       let message: string = startMessage;
       let status: Status = "IsPlaying";
@@ -96,11 +92,8 @@ export function reducer(state: State, action: any): State {
   }
 }
 
-function drawPlayerStarterHand(
-  oldHand: Hand,
-  oldDeck: Card[]
-): { deck: Card[]; hand: Hand } {
-  let cards: Card[] = oldHand.cards;
+function drawPlayerStarterHand(oldDeck: Card[]): { deck: Card[]; hand: Hand } {
+  let cards: Card[] = [];
   for (let index = 0; index < 2; index++) {
     let card: Card | undefined = oldDeck[index];
     if (card) {
@@ -111,11 +104,8 @@ function drawPlayerStarterHand(
   return { deck, hand: { cards, value: calculateHand(cards) } };
 }
 
-function drawDealerStarterHand(
-  oldHand: Hand,
-  oldDeck: Card[]
-): { deck: Card[]; hand: Hand } {
-  let cards: Card[] = oldHand.cards;
+function drawDealerStarterHand(oldDeck: Card[]): { deck: Card[]; hand: Hand } {
+  let cards: Card[] = [];
   for (let index = 0; index < 2; index++) {
     let card: Card | undefined = oldDeck[index];
     if (card) {

@@ -188,4 +188,27 @@ describe("<Game />", () => {
 
     cy.get("[data-cy='status']").should("have.text", "You won");
   });
+
+  it("Should reset hand after won", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "K", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+      { rank: "2", suit: "club", hidden: false },
+      { rank: "3", suit: "club", hidden: false },
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "3", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You won");
+
+    cy.get("[data-cy='NewGameButton']").click();
+
+    cy.get("img").should("have.length", 4);
+  });
 });
