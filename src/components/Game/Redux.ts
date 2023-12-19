@@ -48,13 +48,12 @@ export function reducer(state: State, action: any): State {
       );
       let { deck, hand: dealerHand } = drawDealerStarterHand(updatedDeck);
 
-      let message: string = startMessage;
+      let message: string = initialHandDealtMessage;
       let status: Status = "IsPlaying";
+
       if (playerHand.value === 21) {
         message = winnerMessage;
         status = "Win";
-      } else {
-        message = initialHandDealtMessage;
       }
 
       return {
@@ -73,6 +72,7 @@ export function reducer(state: State, action: any): State {
       let { deck, hand: playerHand } = draw(state.playerHand, state.deck);
       let message: string = initialHandDealtMessage;
       let status: Status = "IsPlaying";
+
       if (playerHand.value === 21) {
         message = winnerMessage;
         status = "Win";
@@ -93,25 +93,30 @@ export function reducer(state: State, action: any): State {
     case StayAction: {
       let message: string = startMessage;
       let status: Status = "IsPlaying";
+
       let dealerHand: Hand = { cards: [], value: 0 };
       dealerHand.cards = [...state.dealerHand.cards];
       dealerHand.cards[1].hidden = false;
       dealerHand.value = calculateHand(dealerHand.cards);
-      if (dealerHand.value === 21) {
-        message = lostMessage;
-        status = "Lost";
-      } else if (dealerHand.value <= 17) {
+
+      if (dealerHand.value <= 17) {
         let oldDeck: Card[] = state.deck;
         while (dealerHand.value < 21) {
           let { deck, hand } = draw(dealerHand, oldDeck);
           dealerHand = hand;
           oldDeck = deck;
         }
-        if (dealerHand.value > 21) {
-          message = winnerMessage;
-          status = "Win";
-        }
       }
+      if (dealerHand.value > 21) {
+        message = winnerMessage;
+        status = "Win";
+      }
+
+      if (dealerHand.value === 21) {
+        message = lostMessage;
+        status = "Lost";
+      }
+
       return {
         ...state,
         message,
@@ -126,18 +131,17 @@ export function reducer(state: State, action: any): State {
 }
 
 function drawPlayerStarterHand(oldDeck: Card[]): { deck: Card[]; hand: Hand } {
-  let cards: Card[] = [];
-  for (let index = 0; index < 2; index++) {
-    let card: Card | undefined = oldDeck[index];
-    if (card) {
-      cards = [...cards, card];
-    }
-  }
-  let deck: Card[] = oldDeck.slice(2);
+  let { deck, cards } = drawStarterHand(oldDeck);
   return { deck, hand: { cards, value: calculateHand(cards) } };
 }
 
 function drawDealerStarterHand(oldDeck: Card[]): { deck: Card[]; hand: Hand } {
+  let { deck, cards } = drawStarterHand(oldDeck);
+  cards[1].hidden = true;
+  return { deck, hand: { cards, value: calculateHand(cards) } };
+}
+
+function drawStarterHand(oldDeck: Card[]): { deck: Card[]; cards: Card[] } {
   let cards: Card[] = [];
   for (let index = 0; index < 2; index++) {
     let card: Card | undefined = oldDeck[index];
@@ -145,9 +149,8 @@ function drawDealerStarterHand(oldDeck: Card[]): { deck: Card[]; hand: Hand } {
       cards = [...cards, card];
     }
   }
-  cards[1].hidden = true;
   let deck: Card[] = oldDeck.slice(2);
-  return { deck, hand: { cards, value: calculateHand(cards) } };
+  return { deck, cards };
 }
 
 function draw(oldHand: Hand, oldDeck: Card[]): { deck: Card[]; hand: Hand } {
