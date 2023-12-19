@@ -1,6 +1,6 @@
 import Hand from "../Hand/Hand";
 import "./Game.css";
-import { HitAction, NewGameAction, State } from "./Redux";
+import { HitAction, NewGameAction, State, StayAction } from "./Redux";
 
 interface GameProps {
   dispatch: React.Dispatch<any>;
@@ -16,8 +16,12 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
     dispatch({ type: HitAction });
   }
 
+  function handleStayButtonClick() {
+    dispatch({ type: StayAction });
+  }
+
   function Panel(): JSX.Element {
-    if (state.status === "Start" || state.status === "Winner") {
+    if (state.status === "Start" || state.status === "Win") {
       return (
         <div className='buttonbox'>
           <button
@@ -34,7 +38,9 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
         <button data-cy='HitButton' onClick={handleHitButtonClick}>
           Hit
         </button>
-        <button data-cy='StayButton'>Stay</button>
+        <button data-cy='StayButton' onClick={handleStayButtonClick}>
+          Stay
+        </button>
       </div>
     );
   }

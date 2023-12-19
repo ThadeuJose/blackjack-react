@@ -211,4 +211,20 @@ describe("<Game />", () => {
 
     cy.get("img").should("have.length", 4);
   });
+
+  it("Should lost with a 21 in dealer hand", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "K", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='StayButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You lost");
+  });
 });

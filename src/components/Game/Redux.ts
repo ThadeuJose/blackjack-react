@@ -3,13 +3,14 @@ import { Card } from "../../Card";
 const startMessage: string = "Press 'New Game' to begin";
 const initialHandDealtMessage: string = "The initial hands are dealt";
 const winnerMessage: string = "You won";
+const lostMessage: string = "You lost";
 
 type Hand = {
   cards: Card[];
   value: number;
 };
 
-type Status = "Start" | "IsPlaying" | "Winner";
+type Status = "Start" | "IsPlaying" | "Win" | "Lost";
 
 export type State = {
   message: string;
@@ -37,6 +38,7 @@ export function init(deck: Card[]): State {
 
 export const NewGameAction: string = "NewGame";
 export const HitAction: string = "Hit";
+export const StayAction: string = "Stay";
 
 export function reducer(state: State, action: any): State {
   switch (action.type) {
@@ -50,7 +52,7 @@ export function reducer(state: State, action: any): State {
       let status: Status = "IsPlaying";
       if (playerHand.value === 21) {
         message = winnerMessage;
-        status = "Winner";
+        status = "Win";
       } else {
         message = initialHandDealtMessage;
       }
@@ -73,7 +75,7 @@ export function reducer(state: State, action: any): State {
       let status: Status = "IsPlaying";
       if (playerHand.value === 21) {
         message = winnerMessage;
-        status = "Winner";
+        status = "Win";
       } else {
         message = initialHandDealtMessage;
       }
@@ -82,6 +84,26 @@ export function reducer(state: State, action: any): State {
         ...state,
         playerHand,
         deck,
+        message,
+        status,
+      };
+    }
+    case StayAction: {
+      let message: string = startMessage;
+      let status: Status = "IsPlaying";
+      let dealerHand: Hand = { cards: [], value: 0 };
+      dealerHand.cards = [...state.dealerHand.cards];
+      dealerHand.cards[1].hidden = false;
+      dealerHand.value = calculateHand(dealerHand.cards);
+      if (dealerHand.value === 21) {
+        message = lostMessage;
+        status = "Lost";
+      } else {
+        message = initialHandDealtMessage;
+      }
+
+      return {
+        ...state,
         message,
         status,
       };
