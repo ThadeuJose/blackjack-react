@@ -227,4 +227,21 @@ describe("<Game />", () => {
 
     cy.get("[data-cy='status']").should("have.text", "You lost");
   });
+
+  it("Should win with a dealer bust", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "K", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "7", suit: "club", hidden: false },
+      { rank: "7", suit: "heart", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='StayButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You won");
+  });
 });

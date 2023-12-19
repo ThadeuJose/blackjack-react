@@ -5,12 +5,12 @@ const initialHandDealtMessage: string = "The initial hands are dealt";
 const winnerMessage: string = "You won";
 const lostMessage: string = "You lost";
 
-type Hand = {
+export type Hand = {
   cards: Card[];
   value: number;
 };
 
-type Status = "Start" | "IsPlaying" | "Win" | "Lost";
+export type Status = "Start" | "IsPlaying" | "Win" | "Lost";
 
 export type State = {
   message: string;
@@ -98,13 +98,22 @@ export function reducer(state: State, action: any): State {
       if (dealerHand.value === 21) {
         message = lostMessage;
         status = "Lost";
-      } else {
-        message = initialHandDealtMessage;
+      } else if (dealerHand.value <= 17) {
+        let oldDeck: Card[] = state.deck;
+        while (dealerHand.value < 21) {
+          let { deck, hand } = draw(dealerHand, oldDeck);
+          dealerHand = hand;
+          oldDeck = deck;
+        }
+        if (dealerHand.value > 21) {
+          message = winnerMessage;
+          status = "Win";
+        }
       }
-
       return {
         ...state,
         message,
+        dealerHand,
         status,
       };
     }
