@@ -71,13 +71,15 @@ export function reducer(state: State, action: any): State {
         return state;
       }
       let { deck, hand: playerHand } = draw(state.playerHand, state.deck);
-      let message: string = startMessage;
+      let message: string = initialHandDealtMessage;
       let status: Status = "IsPlaying";
       if (playerHand.value === 21) {
         message = winnerMessage;
         status = "Win";
-      } else {
-        message = initialHandDealtMessage;
+      }
+      if (playerHand.value > 21) {
+        message = lostMessage;
+        status = "Lost";
       }
 
       return {
