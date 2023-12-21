@@ -1,5 +1,4 @@
 import Hand from "../Hand/Hand";
-import "./Game.css";
 import { HitAction, NewGameAction, State, StayAction } from "./Redux";
 
 interface GameProps {
@@ -23,8 +22,9 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
   function Panel(): JSX.Element {
     if (state.status !== "IsPlaying") {
       return (
-        <div className='buttonbox'>
+        <div className='flex w-fit mx-auto'>
           <button
+            className=' bg-green-600 w-fit h-fit p-2 px-4 rounded font-semibold'
             data-cy='NewGameButton'
             onClick={() => handleNewGameButtonClick()}
           >
@@ -34,11 +34,19 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
       );
     }
     return (
-      <div className='buttonbox'>
-        <button data-cy='HitButton' onClick={handleHitButtonClick}>
+      <div className='flex gap-2 w-fit mx-auto'>
+        <button
+          className='bg-green-600 w-fit h-fit p-2 px-4 rounded font-semibold'
+          data-cy='HitButton'
+          onClick={handleHitButtonClick}
+        >
           Hit
         </button>
-        <button data-cy='StayButton' onClick={handleStayButtonClick}>
+        <button
+          className='bg-red-600 w-fit h-fit p-2 px-4 rounded font-semibold'
+          data-cy='StayButton'
+          onClick={handleStayButtonClick}
+        >
           Stay
         </button>
       </div>
@@ -46,8 +54,8 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
   }
 
   return (
-    <div className='game-container'>
-      <div className='hands-box'>
+    <div className='h-screen w-80vw mx-auto'>
+      <div className='h-70vh pt-3'>
         <Hand
           title={"Dealer's hand"}
           data_cy='dealerHandValue'
@@ -61,11 +69,16 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
           value={state.playerHand.value}
         />
       </div>
-      <div className='control-box'>
-        <div className='textupdates' data-cy='status'>
-          {state.message}
+      <div className='h-30vh'>
+        <div className=''>
+          <div
+            className='mx-auto p-6 my-4 rounded-lg text-center font-semibold bg-gray-600'
+            data-cy='status'
+          >
+            {state.message}
+          </div>
         </div>
-        {Panel()}
+        <div className=''>{Panel()}</div>
       </div>
     </div>
   );

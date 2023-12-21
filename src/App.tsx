@@ -1,8 +1,6 @@
-import { useReducer } from "react";
 import { Card, deckOfCards } from "./Card";
-import Game from "./components/Game/Game";
-import { init, reducer } from "./components/Game/Redux";
 import { Store } from "./Store";
+import "./tailwind.css";
 
 export default function App() {
   const testDeckOfCards: Card[] = [

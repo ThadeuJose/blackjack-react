@@ -1,5 +1,4 @@
 import { Card } from "../../Card";
-import "./Hand.css";
 
 interface HandProps {
   title: string;
@@ -15,16 +14,19 @@ export default function Hand({
   data_cy,
 }: HandProps): JSX.Element {
   return (
-    <div className='container'>
+    <div className='container flex flex-col items-center pb-4'>
       {value > 0 && (
-        <div className='title-box'>
-          {title}: <span data-cy={data_cy}>{value}</span>
+        <div className='flex pb-2'>
+          <div className='font-semibold pr-2'>{title}:</div>
+          <span className='font-bold ' data-cy={data_cy}>
+            {value}
+          </span>
         </div>
       )}
-      <div className='card-box'>
+      <div className='flex gap-2'>
         {cards.map((path, index) => (
           <img
-            className='card'
+            className='h-44'
             key={index}
             src={`images/${printCard(path)}.png`}
           />
