@@ -16,9 +16,11 @@ export default function Hand({
 }: HandProps): JSX.Element {
   return (
     <div className='container'>
-      <div className='title-box'>
-        {title}: <span data-cy={data_cy}>{value}</span>
-      </div>
+      {value > 0 && (
+        <div className='title-box'>
+          {title}: <span data-cy={data_cy}>{value}</span>
+        </div>
+      )}
       <div className='card-box'>
         {cards.map((path, index) => (
           <img

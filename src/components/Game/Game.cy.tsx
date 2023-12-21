@@ -30,6 +30,20 @@ describe("<Game />", () => {
     cy.get("[data-cy='StayButton']").should("not.exist");
   });
 
+  it("Shouldn't show dealer or player hand text when game begin", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "hearts", hidden: false },
+      { rank: "3", suit: "hearts", hidden: false },
+      { rank: "K", suit: "clubs", hidden: false },
+      { rank: "A", suit: "clubs", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.contains("Dealer's hand").should("not.exist");
+    cy.contains("Player's hand").should("not.exist");
+  });
+
   it("Should show start message when begin", () => {
     const testDeckOfCards: Card[] = [
       { rank: "2", suit: "hearts", hidden: false },
