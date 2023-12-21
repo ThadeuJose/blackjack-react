@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { Card } from "./Card";
+import { Card, deckOfCards } from "./Card";
 import Game from "./components/Game/Game";
 import { init, reducer } from "./components/Game/Redux";
 import { Store } from "./Store";
@@ -12,7 +12,8 @@ export default function App() {
     { rank: "A", suit: "club", hidden: false },
   ];
 
-  return <Store deck={testDeckOfCards}></Store>;
+  //return <Store deck={testDeckOfCards}></Store>;
+  return <Store deck={shuffleDeck(deckOfCards)}></Store>;
 }
 
 function shuffleDeck(deck: any) {
