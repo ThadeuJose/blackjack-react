@@ -135,8 +135,6 @@ describe("<Game />", () => {
     cy.get("[data-cy='NewGameButton']").click();
     cy.get("[data-cy='HitButton']").click();
     cy.get("[data-cy='HitButton']").click();
-    cy.get("[data-cy='HitButton']").click();
-    cy.get("[data-cy='HitButton']").click();
 
     cy.get("img").eq(0).should("have.attr", "src", "images/club_king.png");
     cy.get("img").eq(1).should("have.attr", "src", "images/back.png");
@@ -226,6 +224,22 @@ describe("<Game />", () => {
     cy.get("[data-cy='StayButton']").click();
 
     cy.get("[data-cy='status']").should("have.text", "You lost");
+  });
+
+  it("Should show New Game button when lost", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "K", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='StayButton']").click();
+
+    cy.get("[data-cy='NewGameButton']").should("exist");
   });
 
   it("Should win with a dealer bust", () => {

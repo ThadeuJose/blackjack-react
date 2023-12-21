@@ -21,7 +21,7 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
   }
 
   function Panel(): JSX.Element {
-    if (state.status === "Start" || state.status === "Win") {
+    if (state.status !== "IsPlaying") {
       return (
         <div className='buttonbox'>
           <button
