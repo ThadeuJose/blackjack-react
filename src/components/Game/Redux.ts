@@ -73,13 +73,14 @@ export function reducer(state: State, action: any): State {
       let message: string = initialHandDealtMessage;
       let status: Status = "IsPlaying";
 
-      if (playerHand.value === 21) {
-        message = winnerMessage;
-        status = "Win";
-      }
       if (playerHand.value > 21) {
         message = lostMessage;
         status = "Lost";
+      }
+
+      if (playerHand.value === 21) {
+        message = winnerMessage;
+        status = "Win";
       }
 
       return {
@@ -91,9 +92,6 @@ export function reducer(state: State, action: any): State {
       };
     }
     case StayAction: {
-      let message: string = startMessage;
-      let status: Status = "IsPlaying";
-
       let dealerHand: Hand = { cards: [], value: 0 };
       dealerHand.cards = [...state.dealerHand.cards];
       dealerHand.cards[1].hidden = false;
@@ -107,15 +105,11 @@ export function reducer(state: State, action: any): State {
           oldDeck = deck;
         }
       }
-      if (dealerHand.value > 21) {
-        message = winnerMessage;
-        status = "Win";
-      }
 
-      if (dealerHand.value === 21) {
-        message = lostMessage;
-        status = "Lost";
-      }
+      let { message, status } = calculateResult(
+        dealerHand.value,
+        state.playerHand.value
+      );
 
       return {
         ...state,
@@ -128,6 +122,33 @@ export function reducer(state: State, action: any): State {
       return state;
     }
   }
+}
+
+function calculateResult(
+  dealerHandValue: number,
+  playerHandValue: number
+): { message: string; status: Status } {
+  const win: { message: string; status: Status } = {
+    message: winnerMessage,
+    status: "Win",
+  };
+  const lost: { message: string; status: Status } = {
+    message: lostMessage,
+    status: "Lost",
+  };
+
+  if (dealerHandValue > 21) {
+    return win;
+  }
+
+  if (dealerHandValue === 21) {
+    return lost;
+  }
+
+  if (dealerHandValue > playerHandValue) {
+    return lost;
+  }
+  return win;
 }
 
 function drawPlayerStarterHand(oldDeck: Card[]): { deck: Card[]; hand: Hand } {
