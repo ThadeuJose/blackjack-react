@@ -72,7 +72,7 @@ export default function Game({ dispatch, state }: GameProps): JSX.Element {
       <div className='h-30vh'>
         <div className=''>
           <div
-            className='mx-auto p-6 my-4 rounded-lg text-center font-semibold bg-gray-600'
+            className='mx-auto p-6 my-4 rounded-lg text-center font-semibold bg-gray-400'
             data-cy='status'
           >
             {state.message}

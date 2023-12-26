@@ -185,21 +185,13 @@ function draw(oldHand: Hand, oldDeck: Card[]): { deck: Card[]; hand: Hand } {
 }
 
 export function calculateHand(hand: Card[]): number {
-  let total: number = hand
-    .filter((card) => !card.hidden)
-    .map((card) => calculateValue(card.rank))
-    .reduce((accumulator, value) => accumulator + value, 0);
-  if (total >= 21) {
-    return total;
-  }
-  let aceAmount = hand.filter(
-    (card) => card.rank === "A" && !card.hidden
-  ).length;
-  for (let index = 0; index < aceAmount; index++) {
+  const UpdatedHand = hand.filter((card) => !card.hidden);
+  let total: number = UpdatedHand.map((card) =>
+    calculateValue(card.rank)
+  ).reduce((accumulator, value) => accumulator + value, 0);
+  let hasAce: boolean = UpdatedHand.some((card) => card.rank === "A");
+  if (total < 12 && hasAce) {
     total += 10;
-    if (total >= 21) {
-      return total;
-    }
   }
   return total;
 }

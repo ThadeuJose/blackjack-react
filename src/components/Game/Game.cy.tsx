@@ -309,4 +309,37 @@ describe("<Game />", () => {
 
     cy.get("[data-cy='status']").should("have.text", "You won");
   });
+
+  it("Should show correct sum of points in player and dealer hand with Ace", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "3", suit: "club", hidden: false },
+      { rank: "9", suit: "spades", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+
+    cy.get("[data-cy='playerHandValue']").contains(12);
+  });
+
+  it("Should show calculate sum of points in player with Ace", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "K", suit: "club", hidden: false },
+      { rank: "3", suit: "club", hidden: false },
+      { rank: "9", suit: "spades", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+
+    cy.get("[data-cy='playerHandValue']").contains(21);
+  });
 });
