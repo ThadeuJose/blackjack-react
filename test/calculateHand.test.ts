@@ -2,7 +2,7 @@ import { Card } from "../src/Card";
 import { expect } from "@jest/globals";
 import { calculateHand } from "../src/components/Game/Redux";
 
-describe("printCard", () => {
+describe("calculateHand", () => {
   test("should count value", () => {
     const card: Card = { rank: "10", suit: "heart", hidden: false };
     const value = calculateHand([card]);
