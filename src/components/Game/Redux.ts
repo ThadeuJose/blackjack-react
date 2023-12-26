@@ -70,6 +70,9 @@ export function reducer(state: State, action: any): State {
         return state;
       }
       let { deck, hand: playerHand } = draw(state.playerHand, state.deck);
+      let dealerHand: Hand = { cards: [], value: 0 };
+      dealerHand.cards = [...state.dealerHand.cards];
+
       let message: string = initialHandDealtMessage;
       let status: Status = "IsPlaying";
 
@@ -79,13 +82,22 @@ export function reducer(state: State, action: any): State {
       }
 
       if (playerHand.value === 21) {
-        message = winnerMessage;
-        status = "Win";
+        dealerHand.cards[1].hidden = false;
+        dealerHand.value = calculateHand(dealerHand.cards);
+
+        if (isBlackjack(dealerHand.cards)) {
+          message = lostMessage;
+          status = "Lost";
+        } else {
+          message = winnerMessage;
+          status = "Win";
+        }
       }
 
       return {
         ...state,
         playerHand,
+        dealerHand,
         deck,
         message,
         status,
@@ -195,6 +207,7 @@ export function calculateHand(hand: Card[]): number {
   }
   return total;
 }
+
 function calculateValue(rank: string): number {
   if (rank === "A") {
     return 1;
@@ -203,4 +216,13 @@ function calculateValue(rank: string): number {
     return 10;
   }
   return Number(rank);
+}
+
+export function isBlackjack(hand: Card[]): boolean {
+  const UpdatedHand = hand.filter((card) => !card.hidden);
+  let hasAce: boolean = UpdatedHand.some((card) => card.rank === "A");
+  let has10: boolean = UpdatedHand.some(
+    (card) => calculateValue(card.rank) === 10
+  );
+  return hasAce && has10;
 }

@@ -332,7 +332,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "heart", hidden: false },
       { rank: "K", suit: "club", hidden: false },
       { rank: "3", suit: "club", hidden: false },
-      { rank: "9", suit: "spades", hidden: false },
+      { rank: "9", suit: "spade", hidden: false },
     ];
 
     cy.mount(<Store deck={testDeckOfCards} />);
@@ -341,5 +341,22 @@ describe("<Game />", () => {
     cy.get("[data-cy='HitButton']").click();
 
     cy.get("[data-cy='playerHandValue']").contains(21);
+  });
+
+  it("Should lost a dealer blackjack", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "10", suit: "heart", hidden: false },
+      { rank: "2", suit: "heart", hidden: false },
+      { rank: "10", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+      { rank: "9", suit: "spade", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='HitButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You lost");
   });
 });
