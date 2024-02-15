@@ -4,13 +4,14 @@ const startMessage: string = "Press 'New Game' to begin";
 const initialHandDealtMessage: string = "The initial hands are dealt";
 const winnerMessage: string = "You won";
 const lostMessage: string = "You lost";
+const tieMessage: string = "You tie";
 
 export type Hand = {
   cards: Card[];
   value: number;
 };
 
-export type Status = "Start" | "IsPlaying" | "Win" | "Lost";
+export type Status = "Start" | "IsPlaying" | "Tie" | "Win" | "Lost";
 
 export type State = {
   message: string;
@@ -52,8 +53,16 @@ export function reducer(state: State, action: any): State {
       let status: Status = "IsPlaying";
 
       if (playerHand.value === 21) {
-        message = winnerMessage;
-        status = "Win";
+        dealerHand.cards[1].hidden = false;
+        dealerHand.value = calculateHand(dealerHand.cards);
+
+        if (isBlackjack(dealerHand.cards)) {
+          message = tieMessage;
+          status = "Tie";
+        } else {
+          message = winnerMessage;
+          status = "Win";
+        }
       }
 
       return {
@@ -72,6 +81,7 @@ export function reducer(state: State, action: any): State {
       let { deck, hand: playerHand } = draw(state.playerHand, state.deck);
       let dealerHand: Hand = { cards: [], value: 0 };
       dealerHand.cards = [...state.dealerHand.cards];
+      dealerHand.value = calculateHand(dealerHand.cards);
 
       let message: string = initialHandDealtMessage;
       let status: Status = "IsPlaying";
@@ -148,6 +158,10 @@ function calculateResult(
     message: lostMessage,
     status: "Lost",
   };
+  const tie: { message: string; status: Status } = {
+    message: tieMessage,
+    status: "Tie",
+  };
 
   if (dealerHandValue > 21) {
     return win;
@@ -159,6 +173,10 @@ function calculateResult(
 
   if (dealerHandValue > playerHandValue) {
     return lost;
+  }
+
+  if (dealerHandValue === playerHandValue) {
+    return tie;
   }
   return win;
 }

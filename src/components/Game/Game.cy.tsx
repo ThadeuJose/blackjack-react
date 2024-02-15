@@ -191,7 +191,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "heart", hidden: false },
       { rank: "K", suit: "heart", hidden: false },
       { rank: "K", suit: "club", hidden: false },
-      { rank: "A", suit: "club", hidden: false },
+      { rank: "2", suit: "club", hidden: false },
     ];
 
     cy.mount(<Store deck={testDeckOfCards} />);
@@ -206,7 +206,7 @@ describe("<Game />", () => {
       { rank: "A", suit: "heart", hidden: false },
       { rank: "K", suit: "heart", hidden: false },
       { rank: "K", suit: "club", hidden: false },
-      { rank: "A", suit: "club", hidden: false },
+      { rank: "2", suit: "club", hidden: false },
       { rank: "2", suit: "club", hidden: false },
       { rank: "3", suit: "club", hidden: false },
       { rank: "2", suit: "heart", hidden: false },
@@ -358,5 +358,36 @@ describe("<Game />", () => {
     cy.get("[data-cy='HitButton']").click();
 
     cy.get("[data-cy='status']").should("have.text", "You lost");
+  });
+
+  it("Should lost a dealer blackjack", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "10", suit: "heart", hidden: false },
+      { rank: "A", suit: "heart", hidden: false },
+      { rank: "10", suit: "club", hidden: false },
+      { rank: "A", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You tie");
+  });
+
+  it("Should tie with dealer", () => {
+    const testDeckOfCards: Card[] = [
+      { rank: "10", suit: "heart", hidden: false },
+      { rank: "8", suit: "heart", hidden: false },
+      { rank: "10", suit: "club", hidden: false },
+      { rank: "8", suit: "club", hidden: false },
+    ];
+
+    cy.mount(<Store deck={testDeckOfCards} />);
+
+    cy.get("[data-cy='NewGameButton']").click();
+    cy.get("[data-cy='StayButton']").click();
+
+    cy.get("[data-cy='status']").should("have.text", "You tie");
   });
 });
