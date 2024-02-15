@@ -7,7 +7,7 @@ describe("isBlackjack", () => {
     const hand: Card[] = [
       { rank: "10", suit: "heart", hidden: false },
       { rank: "2", suit: "heart", hidden: false },
-      { rank: "9", suit: "heart", hidden: false },
+      { rank: "A", suit: "heart", hidden: false },
     ];
     const value: boolean = isBlackjack(hand);
     expect(value).toBeFalsy();

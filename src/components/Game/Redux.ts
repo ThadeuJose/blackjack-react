@@ -237,9 +237,12 @@ function calculateValue(rank: string): number {
 }
 
 export function isBlackjack(hand: Card[]): boolean {
-  const UpdatedHand = hand.filter((card) => !card.hidden);
-  let hasAce: boolean = UpdatedHand.some((card) => card.rank === "A");
-  let has10: boolean = UpdatedHand.some(
+  const updatedHand = hand.filter((card) => !card.hidden);
+  if (updatedHand.length !== 2) {
+    return false;
+  }
+  let hasAce: boolean = updatedHand.some((card) => card.rank === "A");
+  let has10: boolean = updatedHand.some(
     (card) => calculateValue(card.rank) === 10
   );
   return hasAce && has10;
